@@ -1,0 +1,116 @@
+version: '2'
+services:
+  deluge_music:
+    # Web UI at http://localhost:8112
+    image: linuxserver/deluge
+    ports:
+      - "8112:8112" # Web UI
+      - "62958/tcp:62958/tcp" # Torrent
+      - "62958/udp:62958/udp" # Torrent
+      - "58846:58848" # Daemon
+    volumes:
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/config/deluge_music:/config
+    env_file:
+      - var.env
+  deluge_tvshows:
+    # Web UI at http://localhost:8113
+    image: linuxserver/deluge
+    ports:
+      - "8113:8112" # Web UI
+      - "62957/tcp:62958/tcp" # Torrent
+      - "62957/udp:62958/udp" # Torrent
+      - "58847:58848" # Daemon
+    volumes:
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/config/deluge_tvshows:/config
+    env_file:
+      - var.env
+  deluge_movies:
+    # Web UI at http://localhost:8114
+    image: linuxserver/deluge
+    ports:
+      - "8114:8112" # Web UI
+      - "62956/tcp:62958/tcp" # Torrent
+      - "62956/udp:62958/udp" # Torrent
+      - "58848:58848" # Daemon
+    volumes:
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/config/deluge_movies:/config
+    env_file:
+      - var.env
+  sabnzbd:
+    # Web UI at http://localhost:8080
+    #           https://localhost:9090
+    image: linuxserver/sabnzbd
+    ports:
+      - "8080:8080" # Web UI http
+      - "9090:9090" # Web UI https
+    volumes:
+      - /mnt/storage/media-server/config/sabnzb:/config
+      - /mnt/storage/media-server/download:/downloads
+    env_file:
+      - var.env
+  headphones:
+    # Web UI at http://localhost:8181
+    image: linuxserver/headphones
+    depends_on:
+      - deluge_music
+      - sabnzbd
+    ports:
+      - "8181:8181" # Web UI
+    volumes:
+      - /mnt/storage/media-server/config/headphones:/config
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/library/music:/music
+    env_file:
+      - var.env
+  sonarr:
+    # Web UI at http://localhost:8989
+    #           http://localhost:9898
+    image: linuxserver/sonarr
+    depends_on:
+      - deluge_tvshows
+      - sabnzbd
+    ports:
+      - "8989:8989" # Web UI http
+      - "9898:9898" # Web UI https
+    volumes:
+      - /mnt/storage/media-server/config/sonarr:/config
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/library/tvshows:/tv
+    env_file:
+      - var.env
+  couchpotato:
+    # Web UI at http://localhost:5050
+    image: linuxserver/couchpotato
+    depends_on:
+      - deluge_movies
+      - sabnzbd
+    ports:
+      - "5050:5050" # Web UI
+    volumes:
+      - /mnt/storage/media-server/config/couchpotato:/config
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/library/movies:/movies
+    env_file:
+      - var.env
+  plex:
+    # Web UI at http://localhost:32400/web
+    image: linuxserver/plex
+    depends_on:
+      - headphones
+      - sonarr
+      - couchpotato
+    network_mode: "host"
+    volumes:
+      - /mnt/storage/media-server/config/plex:/config
+      - /mnt/storage/media-server/library/music:/data/music
+      - /mnt/storage/media-server/library/tvshows:/data/tvshows
+      - /mnt/storage/media-server/library/movies:/data/movies
+      - /tmp/transcode:/transcode
+    env_file:
+      - var.env
+    environment:
+      - VERSION=latest # Use this version if you do not have a plexpass
+      # - VERSION=public # Use this version if you do have a plexpass
