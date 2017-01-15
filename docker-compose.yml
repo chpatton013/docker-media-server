@@ -104,3 +104,12 @@ services:
     environment:
       - VERSION=latest # Use this version if you do not have a plexpass
       # - VERSION=public # Use this version if you do have a plexpass
+  nginx:
+    image: linuxserver/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx_config:/config
+    env_file:
+      - var.env
