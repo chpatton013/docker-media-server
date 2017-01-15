@@ -1,13 +1,13 @@
-version: '2'
+version: "2"
 services:
   deluge_music:
     # Web UI at http://localhost:8112
     image: linuxserver/deluge
     ports:
       - "8112:8112" # Web UI
-      - "62958/tcp:62958/tcp" # Torrent
-      - "62958/udp:62958/udp" # Torrent
-      - "58846:58848" # Daemon
+      - "62956/tcp:62958/tcp" # Torrent
+      - "62956/udp:62958/udp" # Torrent
+      - "58846/tcp:58846/tcp" # Daemon
     volumes:
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/config/deluge_music:/config
@@ -20,7 +20,7 @@ services:
       - "8113:8112" # Web UI
       - "62957/tcp:62958/tcp" # Torrent
       - "62957/udp:62958/udp" # Torrent
-      - "58847:58848" # Daemon
+      - "58847/tcp:58846/tcp" # Daemon
     volumes:
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/config/deluge_tvshows:/config
@@ -31,9 +31,9 @@ services:
     image: linuxserver/deluge
     ports:
       - "8114:8112" # Web UI
-      - "62956/tcp:62958/tcp" # Torrent
-      - "62956/udp:62958/udp" # Torrent
-      - "58848:58848" # Daemon
+      - "62958/tcp:62958/tcp" # Torrent
+      - "62958/udp:62958/udp" # Torrent
+      - "58848/tcp:58846/tcp" # Daemon
     volumes:
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/config/deluge_movies:/config
@@ -54,9 +54,6 @@ services:
   headphones:
     # Web UI at http://localhost:8181
     image: linuxserver/headphones
-    depends_on:
-      - deluge_music
-      - sabnzbd
     ports:
       - "8181:8181" # Web UI
     volumes:
@@ -69,9 +66,6 @@ services:
     # Web UI at http://localhost:8989
     #           http://localhost:9898
     image: linuxserver/sonarr
-    depends_on:
-      - deluge_tvshows
-      - sabnzbd
     ports:
       - "8989:8989" # Web UI http
       - "9898:9898" # Web UI https
@@ -84,9 +78,6 @@ services:
   couchpotato:
     # Web UI at http://localhost:5050
     image: linuxserver/couchpotato
-    depends_on:
-      - deluge_movies
-      - sabnzbd
     ports:
       - "5050:5050" # Web UI
     volumes:
@@ -98,10 +89,9 @@ services:
   plex:
     # Web UI at http://localhost:32400/web
     image: linuxserver/plex
-    depends_on:
-      - headphones
-      - sonarr
-      - couchpotato
+    # Plex uses UPNP, which uses whichever ports the router tells it to. There
+    # is no way to open a finite set of ports and still have Plex work, so it
+    # has to run in host mode.
     network_mode: "host"
     volumes:
       - /mnt/storage/media-server/config/plex:/config
