@@ -1,45 +1,73 @@
 version: "2"
 services:
-  deluge_music:
-    # Web UI at http://localhost:8112
-    image: linuxserver/deluge
-    ports:
-      - "8112:8112" # Web UI
-      - "62956/tcp:62958/tcp" # Torrent
-      - "62956/udp:62958/udp" # Torrent
-      - "58846/tcp:58846/tcp" # Daemon
-    volumes:
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/config/deluge_music:/config
-    env_file:
-      - var.env
-  deluge_tvshows:
-    # Web UI at http://localhost:8113
-    image: linuxserver/deluge
-    ports:
-      - "8113:8112" # Web UI
-      - "62957/tcp:62958/tcp" # Torrent
-      - "62957/udp:62958/udp" # Torrent
-      - "58847/tcp:58846/tcp" # Daemon
-    volumes:
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/config/deluge_tvshows:/config
-    env_file:
-      - var.env
-  deluge_movies:
-    # Web UI at http://localhost:8114
-    image: linuxserver/deluge
-    ports:
-      - "8114:8112" # Web UI
-      - "62958/tcp:62958/tcp" # Torrent
-      - "62958/udp:62958/udp" # Torrent
-      - "58848/tcp:58846/tcp" # Daemon
-    volumes:
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/config/deluge_movies:/config
-    env_file:
-      - var.env
-  sabnzbd:
+  # /usr/bin/python /usr/bin/deluged -c /config -d --loglevel=info -l /config/deluged.log
+  # /usr/bin/python /usr/bin/deluge-web -c /config --loglevel=info
+  # deluge_manual:
+  #   # Web UI at http://localhost:8112
+  #   image: linuxserver/deluge
+  #   ports:
+  #     - "8112:8112" # Web UI
+  #     - "62958/tcp:62958/tcp" # Torrent
+  #     - "62958/udp:62958/udp" # Torrent
+  #     - "58846/tcp:58846/tcp" # Daemon
+  #   volumes:
+  #     - /mnt/storage/media-server/download:/downloads
+  #     - /mnt/storage/media-server/config/deluge_manual:/config
+  #   env_file:
+  #     - var.env
+  # deluge_tvshows:
+  #   # Web UI at http://localhost:8113
+  #   image: linuxserver/deluge
+  #   ports:
+  #     - "8113:8112" # Web UI
+  #     - "62957/tcp:62958/tcp" # Torrent
+  #     - "62957/udp:62958/udp" # Torrent
+  #     - "58845/tcp:58846/tcp" # Daemon
+  #   volumes:
+  #     - /mnt/storage/media-server/download:/downloads
+  #     - /mnt/storage/media-server/config/deluge_tvshows:/config
+  #   env_file:
+  #     - var.env
+  # deluge_movies:
+  #   # Web UI at http://localhost:8114
+  #   image: linuxserver/deluge
+  #   ports:
+  #     - "8114:8112" # Web UI
+  #     - "62956/tcp:62958/tcp" # Torrent
+  #     - "62956/udp:62958/udp" # Torrent
+  #     - "58844/tcp:58846/tcp" # Daemon
+  #   volumes:
+  #     - /mnt/storage/media-server/download:/downloads
+  #     - /mnt/storage/media-server/config/deluge_movies:/config
+  #   env_file:
+  #     - var.env
+  # deluge_music:
+  #   # Web UI at http://localhost:8115
+  #   image: linuxserver/deluge
+  #   ports:
+  #     - "8115:8112" # Web UI
+  #     - "62955/tcp:62958/tcp" # Torrent
+  #     - "62955/udp:62958/udp" # Torrent
+  #     - "58843/tcp:58846/tcp" # Daemon
+  #   volumes:
+  #     - /mnt/storage/media-server/download:/downloads
+  #     - /mnt/storage/media-server/config/deluge_music:/config
+  #   env_file:
+  #     - var.env
+  # deluge_books:
+  #   # Web UI at http://localhost:8116
+  #   image: linuxserver/deluge
+  #   ports:
+  #     - "8116:8112" # Web UI
+  #     - "62954/tcp:62958/tcp" # Torrent
+  #     - "62954/udp:62958/udp" # Torrent
+  #     - "58842/tcp:58846/tcp" # Daemon
+  #   volumes:
+  #     - /mnt/storage/media-server/download:/downloads
+  #     - /mnt/storage/media-server/config/deluge_books:/config
+  #   env_file:
+  #     - var.env
+  sabnzbd_manual:
     # Web UI at http://localhost:8080
     #           https://localhost:9090
     image: linuxserver/sabnzbd
@@ -47,24 +75,25 @@ services:
       - "8080:8080" # Web UI http
       - "9090:9090" # Web UI https
     volumes:
-      - /mnt/storage/media-server/config/sabnzb:/config
+      - /mnt/storage/media-server/config/sabnzb_manual:/config
       - /mnt/storage/media-server/download:/downloads
     env_file:
       - var.env
-  headphones:
-    # Web UI at http://localhost:8181
-    image: linuxserver/headphones
-    ports:
-      - "8181:8181" # Web UI
-    volumes:
-      - /mnt/storage/media-server/config/headphones:/config
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/library/music:/music
-    env_file:
-      - var.env
+  # sabnzbd_automated:
+  #   # Web UI at http://localhost:8081
+  #   #           https://localhost:9091
+  #   image: linuxserver/sabnzbd
+  #   ports:
+  #     - "8081:8080" # Web UI http
+  #     - "9091:9090" # Web UI https
+  #   volumes:
+  #     - /mnt/storage/media-server/config/sabnzb_automated:/config
+  #     - /mnt/storage/media-server/download:/downloads
+  #   env_file:
+  #     - var.env
   sonarr:
     # Web UI at http://localhost:8989
-    #           http://localhost:9898
+    #           https://localhost:9898
     image: linuxserver/sonarr
     ports:
       - "8989:8989" # Web UI http
@@ -86,6 +115,28 @@ services:
       - /mnt/storage/media-server/library/movies:/movies
     env_file:
       - var.env
+  headphones:
+    # Web UI at http://localhost:8181
+    image: linuxserver/headphones
+    ports:
+      - "8181:8181" # Web UI
+    volumes:
+      - /mnt/storage/media-server/config/headphones:/config
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/library/music:/music
+    env_file:
+      - var.env
+  lazylibrarian:
+    # Web UI at http://localhost:5299
+    image: linuxserver/lazylibrarian
+    ports:
+      - "5299:5299" # Web UI
+    volumes:
+      - /mnt/storage/media-server/config/lazylibrarian:/config
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/library/books:/books
+    env_file:
+      - var.env
   plex:
     # Web UI at http://localhost:32400/web
     image: linuxserver/plex
@@ -95,15 +146,15 @@ services:
     network_mode: "host"
     volumes:
       - /mnt/storage/media-server/config/plex:/config
-      - /mnt/storage/media-server/library/music:/data/music
       - /mnt/storage/media-server/library/tvshows:/data/tvshows
       - /mnt/storage/media-server/library/movies:/data/movies
+      - /mnt/storage/media-server/library/music:/data/music
       - /tmp/transcode:/transcode
     env_file:
       - var.env
     environment:
-      - VERSION=latest # Use this version if you do not have a plexpass
-      # - VERSION=public # Use this version if you do have a plexpass
+      # - VERSION=latest # Use this version if you do not have a plexpass
+      - VERSION=public # Use this version if you do have a plexpass
   nginx:
     image: linuxserver/nginx
     ports:
