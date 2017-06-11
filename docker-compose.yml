@@ -1,20 +1,18 @@
 version: "2"
 services:
-  # /usr/bin/python /usr/bin/deluged -c /config -d --loglevel=info -l /config/deluged.log
-  # /usr/bin/python /usr/bin/deluge-web -c /config --loglevel=info
-  # deluge_manual:
-  #   # Web UI at http://localhost:8112
-  #   image: linuxserver/deluge
-  #   ports:
-  #     - "8112:8112" # Web UI
-  #     - "62958/tcp:62958/tcp" # Torrent
-  #     - "62958/udp:62958/udp" # Torrent
-  #     - "58846/tcp:58846/tcp" # Daemon
-  #   volumes:
-  #     - /mnt/storage/media-server/download:/downloads
-  #     - /mnt/storage/media-server/config/deluge_manual:/config
-  #   env_file:
-  #     - var.env
+  deluge_manual:
+    # Web UI at http://localhost:8112
+    image: linuxserver/deluge
+    ports:
+      - "8112:8112" # Web UI
+      - "62958/tcp:62958/tcp" # Torrent
+      - "62958/udp:62958/udp" # Torrent
+      - "58846/tcp:58846/tcp" # Daemon
+    volumes:
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/config/deluge_manual:/config
+    env_file:
+      - var.env
   # deluge_tvshows:
   #   # Web UI at http://localhost:8113
   #   image: linuxserver/deluge
@@ -54,19 +52,19 @@ services:
   #     - /mnt/storage/media-server/config/deluge_music:/config
   #   env_file:
   #     - var.env
-  # deluge_books:
-  #   # Web UI at http://localhost:8116
-  #   image: linuxserver/deluge
-  #   ports:
-  #     - "8116:8112" # Web UI
-  #     - "62954/tcp:62958/tcp" # Torrent
-  #     - "62954/udp:62958/udp" # Torrent
-  #     - "58842/tcp:58846/tcp" # Daemon
-  #   volumes:
-  #     - /mnt/storage/media-server/download:/downloads
-  #     - /mnt/storage/media-server/config/deluge_books:/config
-  #   env_file:
-  #     - var.env
+  deluge_books:
+    # Web UI at http://localhost:8116
+    image: linuxserver/deluge
+    ports:
+      - "8116:8112" # Web UI
+      - "62954/tcp:62958/tcp" # Torrent
+      - "62954/udp:62958/udp" # Torrent
+      - "58842/tcp:58846/tcp" # Daemon
+    volumes:
+      - /mnt/storage/media-server/download:/downloads
+      - /mnt/storage/media-server/config/deluge_books:/config
+    env_file:
+      - var.env
   sabnzbd_manual:
     # Web UI at http://localhost:8080
     #           https://localhost:9090
