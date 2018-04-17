@@ -1,125 +1,69 @@
 version: "2"
 services:
-  deluge_manual:
-    # Web UI at http://localhost:8112
+  organizr:
+    image: lsiocommunity/organizr
+    ports:
+      - "80/tcp:80/tcp" # Web UI
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/organizr:/config
+    env_file:
+      - var.env
+  deluge:
     image: linuxserver/deluge
     ports:
-      - "8112:8112" # Web UI
+      - "8112/tcp:8112/tcp" # Web UI
       - "62958/tcp:62958/tcp" # Torrent
       - "62958/udp:62958/udp" # Torrent
       - "58846/tcp:58846/tcp" # Daemon
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/deluge:/config
       - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/config/deluge_manual:/config
     env_file:
       - var.env
-  # deluge_tvshows:
-  #   # Web UI at http://localhost:8113
-  #   image: linuxserver/deluge
-  #   ports:
-  #     - "8113:8112" # Web UI
-  #     - "62957/tcp:62958/tcp" # Torrent
-  #     - "62957/udp:62958/udp" # Torrent
-  #     - "58845/tcp:58846/tcp" # Daemon
-  #   volumes:
-  #     - /mnt/storage/media-server/download:/downloads
-  #     - /mnt/storage/media-server/config/deluge_tvshows:/config
-  #   env_file:
-  #     - var.env
-  # deluge_movies:
-  #   # Web UI at http://localhost:8114
-  #   image: linuxserver/deluge
-  #   ports:
-  #     - "8114:8112" # Web UI
-  #     - "62956/tcp:62958/tcp" # Torrent
-  #     - "62956/udp:62958/udp" # Torrent
-  #     - "58844/tcp:58846/tcp" # Daemon
-  #   volumes:
-  #     - /mnt/storage/media-server/download:/downloads
-  #     - /mnt/storage/media-server/config/deluge_movies:/config
-  #   env_file:
-  #     - var.env
-  # deluge_music:
-  #   # Web UI at http://localhost:8115
-  #   image: linuxserver/deluge
-  #   ports:
-  #     - "8115:8112" # Web UI
-  #     - "62955/tcp:62958/tcp" # Torrent
-  #     - "62955/udp:62958/udp" # Torrent
-  #     - "58843/tcp:58846/tcp" # Daemon
-  #   volumes:
-  #     - /mnt/storage/media-server/download:/downloads
-  #     - /mnt/storage/media-server/config/deluge_music:/config
-  #   env_file:
-  #     - var.env
-  deluge_books:
-    # Web UI at http://localhost:8116
-    image: linuxserver/deluge
-    ports:
-      - "8116:8112" # Web UI
-      - "62954/tcp:62958/tcp" # Torrent
-      - "62954/udp:62958/udp" # Torrent
-      - "58842/tcp:58846/tcp" # Daemon
-    volumes:
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/config/deluge_books:/config
-    env_file:
-      - var.env
-  sabnzbd_manual:
-    # Web UI at http://localhost:8080
-    #           https://localhost:9090
+  sabnzbd:
     image: linuxserver/sabnzbd
     ports:
-      - "8080:8080" # Web UI http
-      - "9090:9090" # Web UI https
+      - "8080/tcp:8080/tcp" # Web UI http
+      - "9090/tcp:9090/tcp" # Web UI https
     volumes:
-      - /mnt/storage/media-server/config/sabnzb_manual:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/sabnzb:/config
       - /mnt/storage/media-server/download:/downloads
     env_file:
       - var.env
-  # sabnzbd_automated:
-  #   # Web UI at http://localhost:8081
-  #   #           https://localhost:9091
-  #   image: linuxserver/sabnzbd
-  #   ports:
-  #     - "8081:8080" # Web UI http
-  #     - "9091:9090" # Web UI https
-  #   volumes:
-  #     - /mnt/storage/media-server/config/sabnzb_automated:/config
-  #     - /mnt/storage/media-server/download:/downloads
-  #   env_file:
-  #     - var.env
   sonarr:
-    # Web UI at http://localhost:8989
-    #           https://localhost:9898
     image: linuxserver/sonarr
     ports:
-      - "8989:8989" # Web UI http
-      - "9898:9898" # Web UI https
+      - "8989/tcp:8989/tcp" # Web UI http
+      - "9898/tcp:9898/tcp" # Web UI https
     volumes:
-      - /mnt/storage/media-server/config/sonarr:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/sonarr:/config
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/library/tvshows:/tv
     env_file:
       - var.env
-  couchpotato:
-    # Web UI at http://localhost:5050
-    image: linuxserver/couchpotato
+  radarr:
+    image: linuxserver/radarr
     ports:
-      - "5050:5050" # Web UI
+      - "7878/tcp:7878/tcp" # Web UI http
+      - "8787/tcp:8787/tcp" # Web UI https
     volumes:
-      - /mnt/storage/media-server/config/couchpotato:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/radarr:/config
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/library/movies:/movies
     env_file:
       - var.env
-  headphones:
-    # Web UI at http://localhost:8181
-    image: linuxserver/headphones
+  lidarr:
+    image: linuxserver/lidarr
     ports:
-      - "8181:8181" # Web UI
+      - "8686/tcp:8686/tcp" # Web UI http
     volumes:
-      - /mnt/storage/media-server/config/headphones:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/lidarr:/config
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/library/music:/music
     env_file:
@@ -130,20 +74,23 @@ services:
     ports:
       - "5299:5299" # Web UI
     volumes:
-      - /mnt/storage/media-server/config/lazylibrarian:/config
+      - ./config/lazylibrarian:/config
       - /mnt/storage/media-server/download:/downloads
       - /mnt/storage/media-server/library/books:/books
     env_file:
       - var.env
   plex:
-    # Web UI at http://localhost:32400/web
     image: linuxserver/plex
-    # Plex uses UPNP, which uses whichever ports the router tells it to. There
-    # is no way to open a finite set of ports and still have Plex work, so it
-    # has to run in host mode.
+    # Plex uses UPNP to open connections dynamically on request. These
+    # connections use whichever port the UPNP server (usually the router) tells
+    # it to. There is no way to know what these ports will be, nor any way to
+    # allow Docker to open them dynamically. Therefore, host mode networking is
+    # required.
+    # Web UI at http://localhost:32400/web
     network_mode: "host"
     volumes:
-      - /mnt/storage/media-server/config/plex:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/plex:/config
       - /mnt/storage/media-server/library/tvshows:/data/tvshows
       - /mnt/storage/media-server/library/movies:/data/movies
       - /mnt/storage/media-server/library/music:/data/music
@@ -153,12 +100,3 @@ services:
     environment:
       # - VERSION=latest # Use this version if you do not have a plexpass
       - VERSION=public # Use this version if you do have a plexpass
-  nginx:
-    image: linuxserver/nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx_config:/config
-    env_file:
-      - var.env

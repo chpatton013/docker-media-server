@@ -38,8 +38,8 @@
 # Couch Potato
 --append INPUT --protocol tcp --dport 5050 --source 0.0.0.0/0 --jump ACCEPT
 
-# Headphones
---append INPUT --protocol tcp --dport 8181 --source 0.0.0.0/0 --jump ACCEPT
+# Lidarr
+--append INPUT --protocol tcp --dport 8686 --source 0.0.0.0/0 --jump ACCEPT
 
 # LazyLibrarian
 --append INPUT --protocol tcp --dport 5299 --source 0.0.0.0/0 --jump ACCEPT
