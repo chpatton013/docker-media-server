@@ -1,14 +1,5 @@
 version: "2"
 services:
-  organizr:
-    image: lsiocommunity/organizr
-    ports:
-      - "80/tcp:80/tcp" # Web UI
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ./config/organizr:/config
-    env_file:
-      - var.env
   deluge:
     image: linuxserver/deluge
     ports:
@@ -18,8 +9,18 @@ services:
       - "58846/tcp:58846/tcp" # Daemon
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config/deluge:/config
-      - /mnt/storage/media-server/download:/downloads
+      - ${LOCAL_CONFIG_DIR}/deluge:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
+    env_file:
+      - var.env
+  jackett:
+    image: linuxserver/jackett
+    ports:
+      - "9117/tcp:9117/tcp" # Web UI http
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${LOCAL_CONFIG_DIR}/jackett:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
     env_file:
       - var.env
   sabnzbd:
@@ -29,8 +30,8 @@ services:
       - "9090/tcp:9090/tcp" # Web UI https
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config/sabnzb:/config
-      - /mnt/storage/media-server/download:/downloads
+      - ${LOCAL_CONFIG_DIR}/sabnzb:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
     env_file:
       - var.env
   sonarr:
@@ -40,9 +41,9 @@ services:
       - "9898/tcp:9898/tcp" # Web UI https
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config/sonarr:/config
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/library/tvshows:/tv
+      - ${LOCAL_CONFIG_DIR}/sonarr:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
+      - ${MEDIA_SERVER_LIBRARY_DIR}/tvshows:/tv
     env_file:
       - var.env
   radarr:
@@ -52,9 +53,9 @@ services:
       - "8787/tcp:8787/tcp" # Web UI https
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config/radarr:/config
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/library/movies:/movies
+      - ${LOCAL_CONFIG_DIR}/radarr:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
+      - ${MEDIA_SERVER_LIBRARY_DIR}/movies:/movies
     env_file:
       - var.env
   lidarr:
@@ -63,20 +64,19 @@ services:
       - "8686/tcp:8686/tcp" # Web UI http
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config/lidarr:/config
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/library/music:/music
+      - ${LOCAL_CONFIG_DIR}/lidarr:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
+      - ${MEDIA_SERVER_LIBRARY_DIR}/music:/music
     env_file:
       - var.env
   lazylibrarian:
-    # Web UI at http://localhost:5299
     image: linuxserver/lazylibrarian
     ports:
-      - "5299:5299" # Web UI
+      - "5299/tcp:5299/tcp" # Web UI
     volumes:
-      - ./config/lazylibrarian:/config
-      - /mnt/storage/media-server/download:/downloads
-      - /mnt/storage/media-server/library/books:/books
+      - ${LOCAL_CONFIG_DIR}/lazylibrarian:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
+      - ${MEDIA_SERVER_LIBRARY_DIR}/books:/books
     env_file:
       - var.env
   plex:
@@ -86,14 +86,24 @@ services:
     # it to. There is no way to know what these ports will be, nor any way to
     # allow Docker to open them dynamically. Therefore, host mode networking is
     # required.
-    # Web UI at http://localhost:32400/web
     network_mode: "host"
+    ports:
+      - "32400/tcp:32400/tcp" # Web UI http
+      - "1900/udp:1900/udp" # Plex DLNA Server
+      - "3005/tcp:3005/tcp" # Plex Companion
+      - "5353/udp:5353/udp" # older Bonjour/Avahi network discovery
+      - "8324/tcp:8324/tcp" # controlling Plex for Roku via Plex Companion
+      - "32410/udp:32410/udp" # current GDM network discovery
+      - "32412/udp:32412/udp" # current GDM network discovery
+      - "32413/udp:32413/udp" # current GDM network discovery
+      - "32414/udp:32414/udp" # current GDM network discovery
+      - "32469/tcp:32469/tcp" # Plex DLNA Server
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config/plex:/config
-      - /mnt/storage/media-server/library/tvshows:/data/tvshows
-      - /mnt/storage/media-server/library/movies:/data/movies
-      - /mnt/storage/media-server/library/music:/data/music
+      - ${LOCAL_CONFIG_DIR}/plex:/config
+      - ${MEDIA_SERVER_LIBRARY_DIR}/tvshows:/data/tvshows
+      - ${MEDIA_SERVER_LIBRARY_DIR}/movies:/data/movies
+      - ${MEDIA_SERVER_LIBRARY_DIR}/music:/data/music
       - /tmp/transcode:/transcode
     env_file:
       - var.env
