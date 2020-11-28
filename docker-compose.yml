@@ -9,20 +9,20 @@ services:
       - "58846/tcp:58846/tcp" # Daemon
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/deluge:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/deluge:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
     env_file:
-      - var.env
+      - container.env
   jackett:
     image: linuxserver/jackett
     ports:
       - "9117/tcp:9117/tcp" # Web UI http
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/jackett:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/jackett:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
     env_file:
-      - var.env
+      - container.env
   sabnzbd:
     image: linuxserver/sabnzbd
     ports:
@@ -30,10 +30,10 @@ services:
       - "9090/tcp:9090/tcp" # Web UI https
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/sabnzb:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/sabnzb:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
     env_file:
-      - var.env
+      - container.env
   sonarr:
     image: linuxserver/sonarr
     ports:
@@ -41,11 +41,11 @@ services:
       - "9898/tcp:9898/tcp" # Web UI https
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/sonarr:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/sonarr:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
       - ${MEDIA_SERVER_LIBRARY_DIR}/tvshows:/tv
     env_file:
-      - var.env
+      - container.env
   radarr:
     image: linuxserver/radarr
     ports:
@@ -53,32 +53,32 @@ services:
       - "8787/tcp:8787/tcp" # Web UI https
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/radarr:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/radarr:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
       - ${MEDIA_SERVER_LIBRARY_DIR}/movies:/movies
     env_file:
-      - var.env
+      - container.env
   lidarr:
     image: linuxserver/lidarr
     ports:
       - "8686/tcp:8686/tcp" # Web UI http
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/lidarr:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/lidarr:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
       - ${MEDIA_SERVER_LIBRARY_DIR}/music:/music
     env_file:
-      - var.env
+      - container.env
   lazylibrarian:
     image: linuxserver/lazylibrarian
     ports:
       - "5299/tcp:5299/tcp" # Web UI
     volumes:
-      - ${LOCAL_CONFIG_DIR}/lazylibrarian:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/lazylibrarian:/config
       - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
       - ${MEDIA_SERVER_LIBRARY_DIR}/books:/books
     env_file:
-      - var.env
+      - container.env
   plex:
     image: linuxserver/plex
     # Plex uses UPNP to open connections dynamically on request. These
@@ -100,13 +100,13 @@ services:
       - "32469/tcp:32469/tcp" # Plex DLNA Server
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${LOCAL_CONFIG_DIR}/plex:/config
+      - ${MEDIA_SERVER_CONFIG_DIR}/plex:/config
       - ${MEDIA_SERVER_LIBRARY_DIR}/tvshows:/data/tvshows
       - ${MEDIA_SERVER_LIBRARY_DIR}/movies:/data/movies
       - ${MEDIA_SERVER_LIBRARY_DIR}/music:/data/music
-      - /tmp/transcode:/transcode
+      - ${MEDIA_SERVER_TMP_DIR}/transcode:/transcode
     env_file:
-      - var.env
+      - container.env
     environment:
       # - VERSION=latest # Use this version if you do not have a plexpass
       - VERSION=public # Use this version if you do have a plexpass
