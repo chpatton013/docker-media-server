@@ -37,6 +37,17 @@ services:
     env_file:
       - container.env
     restart: unless-stopped
+  nzbhydra2:
+    image: linuxserver/nzbhydra2
+    ports:
+      - "5076/tcp:5076/tcp" # Web UI http
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${MEDIA_SERVER_CONFIG_DIR}/nzbhydra2:/config
+      - ${MEDIA_SERVER_DOWNLOAD_DIR}:/downloads
+    env_file:
+      - container.env
+    restart: unless-stopped
   sonarr:
     image: linuxserver/sonarr
     ports:
